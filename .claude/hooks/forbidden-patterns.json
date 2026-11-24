@@ -1,0 +1,40 @@
+{
+  "codeExtensions": [".ts", ".mts", ".cts", ".js", ".mjs", ".cjs"],
+  "ignoreDirs": [".claude/", "node_modules/"],
+  "patterns": [
+    {
+      "regex": "\\bwaitForTimeout\\s*\\(",
+      "message": "Fixed waits are forbidden. Use a web-first assertion (await expect(locator).toBeVisible()) or page.waitForResponse()."
+    },
+    {
+      "regex": "networkidle",
+      "message": "'networkidle' is unreliable. Assert the UI state you need instead."
+    },
+    {
+      "regex": "force:\\s*true",
+      "message": "force: true hides real actionability problems. Wait for the element to be ready instead."
+    },
+    {
+      "regex": "\\bpage\\.pause\\s*\\(",
+      "message": "page.pause() is for local debugging only. Use --debug instead."
+    },
+    {
+      "regex": "\\b(test|describe)\\.only\\s*\\(",
+      "message": ".only must never be committed. Run a single test via CLI filter instead."
+    },
+    {
+      "regex": "\\bwaitForSelector\\s*\\(",
+      "message": "Use locators with web-first assertions instead of waitForSelector."
+    },
+    {
+      "regex": "eslint-disable",
+      "message": "Disabling lint rules is not allowed. Fix the code; if the rule is wrong for this case, explain it to the user."
+    },
+    { "regex": "@ts-ignore|@ts-nocheck", "message": "Do not silence the type checker. Fix the types." },
+    {
+      "regex": "\\b(sleep|delay)\\s*\\(\\s*\\d",
+      "message": "Fixed delays are forbidden. Wait for a concrete condition."
+    }
+  ],
+  "protectedFiles": ["eslint.config.mjs", "tsconfig.json", ".claude/settings.json", ".claude/hooks/"]
+}
