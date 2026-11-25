@@ -1,11 +1,11 @@
+import { parsePrice } from '../../../src/data/price';
 import { expect, test } from '../../../src/fixtures';
 import type { SortOption } from '../../../src/pages/InventoryPage';
 
 type Compare = (a: string, b: string) => number;
 
 const byName: Compare = (a, b) => a.localeCompare(b);
-const toNumber = (price: string): number => Number(price.replace('$', ''));
-const byPrice: Compare = (a, b) => toNumber(a) - toNumber(b);
+const byPrice: Compare = (a, b) => parsePrice(a) - parsePrice(b);
 
 // Prices are compared as a column (not as product names): two products share the same price,
 // so their relative order is not defined by the price sort.

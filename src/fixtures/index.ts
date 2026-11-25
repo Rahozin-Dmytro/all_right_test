@@ -3,7 +3,9 @@ import { BookingClient } from '../api/BookingClient';
 import type { CreatedBooking } from '../api/types';
 import { buildBooking } from '../data/booking';
 import { CartPage } from '../pages/CartPage';
+import { CheckoutCompletePage } from '../pages/CheckoutCompletePage';
 import { CheckoutInformationPage } from '../pages/CheckoutInformationPage';
+import { CheckoutOverviewPage } from '../pages/CheckoutOverviewPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { LoginPage } from '../pages/LoginPage';
 import { ProductDetailsPage } from '../pages/ProductDetailsPage';
@@ -14,6 +16,8 @@ interface Pages {
   productDetailsPage: ProductDetailsPage;
   cartPage: CartPage;
   checkoutInformationPage: CheckoutInformationPage;
+  checkoutOverviewPage: CheckoutOverviewPage;
+  checkoutCompletePage: CheckoutCompletePage;
 }
 
 interface Cleanup {
@@ -44,6 +48,12 @@ export const test = base.extend<Pages & Api>({
   checkoutInformationPage: async ({ page }, use) => {
     await use(new CheckoutInformationPage(page));
   },
+  checkoutOverviewPage: async ({ page }, use) => {
+    await use(new CheckoutOverviewPage(page));
+  },
+  checkoutCompletePage: async ({ page }, use) => {
+    await use(new CheckoutCompletePage(page));
+  },
 
   bookingClient: async ({ request }, use) => {
     await use(new BookingClient(request));
@@ -59,5 +69,10 @@ export const test = base.extend<Pages & Api>({
     await Promise.all(bookingIds.map((id) => bookingClient.delete(id)));
   },
 });
+
+/** Annotation for a test of a known app bug: the test asserts the correct behaviour and stays `fixme` until the fix. */
+export function knownBug(id: string): { type: string; description: string } {
+  return { type: 'issue', description: `README.md#${id}` };
+}
 
 export { expect } from '@playwright/test';
