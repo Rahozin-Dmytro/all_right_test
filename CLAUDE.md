@@ -47,8 +47,9 @@ tests/e2e/<feature>/   UI specs         tests/api/<feature>/   API specs
 ## Definition of done
 
 1. New/changed tests pass `npm run test:new -- <file>` (3/3).
-2. `npm run check` is green.
-3. Report: what changed, how to run, assumptions, anything left open.
+2. Each new/changed test was seen failing on its own assertion when the behaviour was broken (see `.claude/rules/tests.md`).
+3. `npm run check` is green.
+4. Report: what changed, how to run, assumptions, anything left open.
 
 ## Enforced automatically (do not try to bypass)
 
