@@ -11,6 +11,7 @@
     "test:e2e": "playwright test --project=e2e",
     "test:api": "playwright test --project=api",
     "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
     "test:new": "playwright test --repeat-each=3 --retries=0",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
