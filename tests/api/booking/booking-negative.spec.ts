@@ -53,7 +53,10 @@ test.describe('Booking API negative', { tag: ['@api', '@regression'] }, () => {
         const withoutFirstname: Partial<Booking> = buildBooking();
         delete withoutFirstname.firstname;
 
-        const response = await bookingClient.create(withoutFirstname);
+        // No cleanup: today the API creates nothing (500). If it ever answers 2xx, this test fails and the booking
+        // stays on the server; registering it would need an `if` in the test or a cleanup helper — not worth it
+        // for a test assignment, accepted as a known gap.
+        const response = await bookingClient.createRaw(withoutFirstname);
 
         expect(response.status()).toBe(400);
       },

@@ -42,7 +42,8 @@ tests/e2e/<feature>/   UI specs         tests/api/<feature>/   API specs
 - UI spec with fixtures + steps: `tests/e2e/cart/cart.spec.ts`
 - Negative cases / clean session: `tests/e2e/auth/login.spec.ts`
 - Page Object: `src/pages/InventoryPage.ts` · Component: `src/components/HeaderComponent.ts`
-- API spec with fixture setup/teardown: `tests/api/booking/booking.spec.ts` · client: `src/api/BookingClient.ts`
+- API flow with `test.step` and `cleanup` teardown: `tests/api/booking/booking.spec.ts`
+- API negative cases with `createdBooking` setup/teardown: `tests/api/booking/booking-negative.spec.ts` · client: `src/api/BookingClient.ts`
 
 ## Definition of done
 

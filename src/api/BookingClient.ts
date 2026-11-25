@@ -24,9 +24,13 @@ export class BookingClient {
     this.token = token;
   }
 
-  /** Accepts a partial body so negative tests can send a booking with a missing field. */
-  async create(booking: Partial<Booking>): Promise<APIResponse> {
-    return this.request.post('/booking', { data: booking });
+  async create(booking: Booking): Promise<APIResponse> {
+    return this.createRaw(booking);
+  }
+
+  /** For negative tests only: sends a body that may miss required fields. */
+  async createRaw(body: Partial<Booking>): Promise<APIResponse> {
+    return this.request.post('/booking', { data: body });
   }
 
   async createAndParse(booking: Booking): Promise<CreatedBooking> {
