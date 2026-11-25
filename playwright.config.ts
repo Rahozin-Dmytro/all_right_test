@@ -5,8 +5,8 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: env.ci,
-  // Retries in CI only collect a trace on the first retry; a test that passes only on retry still fails the run.
-  retries: env.ci ? 2 : 0,
+  // One retry in CI only to record a trace and tell flaky from broken; a test that passes only on retry still fails the run.
+  retries: env.ci ? 1 : 0,
   failOnFlakyTests: env.ci,
   workers: env.ci ? 2 : undefined,
   reporter: env.ci
