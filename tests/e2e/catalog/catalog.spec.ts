@@ -35,6 +35,8 @@ test.describe('Catalog', () => {
       await test.step('Open product details', async () => {
         await inventoryPage.openProduct(PRODUCTS.backpack);
         await expect(page).toHaveURL(/\/inventory-item\.html\?id=\d+$/);
+        // Anchor: the URL changes before the page re-renders; the catalog cards share the details test ids.
+        await expect(productDetailsPage.backButton).toBeVisible();
       });
 
       await test.step('Verify details match catalog', async () => {

@@ -1,0 +1,62 @@
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+# A new push cancels the previous run of the same branch. The event name is part of the group,
+# so the push run and the pull_request run of the same commit do not cancel each other.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Lint, typecheck and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Before the browser install: a lint or type error fails the run without waiting for Chromium.
+      - name: Lint and typecheck
+        run: npm run check
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Env is scoped to this step only, so install scripts of dependencies never see the secrets.
+      - name: Run tests
+        run: npm test
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+          API_URL: ${{ vars.API_URL }}
+          STANDARD_USER: ${{ secrets.STANDARD_USER }}
+          LOCKED_USER: ${{ secrets.LOCKED_USER }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+          API_ADMIN_USER: ${{ secrets.API_ADMIN_USER }}
+          API_ADMIN_PASSWORD: ${{ secrets.API_ADMIN_PASSWORD }}
+
+      # Upload after failures too, but not for runs cancelled by a newer push.
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
