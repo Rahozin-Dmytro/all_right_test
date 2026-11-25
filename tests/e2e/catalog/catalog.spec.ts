@@ -1,7 +1,7 @@
+import { PRODUCTS } from '../../../src/data/products';
 import { expect, knownBug, test } from '../../../src/fixtures';
 
 const PRODUCT_COUNT = 6;
-const BACKPACK = 'Sauce Labs Backpack';
 const NON_EXISTENT_PRODUCT_ID = 999;
 
 test.describe('Catalog', () => {
@@ -28,17 +28,17 @@ test.describe('Catalog', () => {
     { tag: ['@regression'] },
     async ({ inventoryPage, productDetailsPage, page }) => {
       const catalogPrice = await test.step('Read product price in catalog', async () => {
-        await expect(inventoryPage.productPrice(BACKPACK)).toBeVisible();
-        return inventoryPage.productPrice(BACKPACK).innerText();
+        await expect(inventoryPage.productPrice(PRODUCTS.backpack)).toBeVisible();
+        return inventoryPage.productPrice(PRODUCTS.backpack).innerText();
       });
 
       await test.step('Open product details', async () => {
-        await inventoryPage.openProduct(BACKPACK);
+        await inventoryPage.openProduct(PRODUCTS.backpack);
         await expect(page).toHaveURL(/\/inventory-item\.html\?id=\d+$/);
       });
 
       await test.step('Verify details match catalog', async () => {
-        await expect(productDetailsPage.productName).toHaveText(BACKPACK);
+        await expect(productDetailsPage.productName).toHaveText(PRODUCTS.backpack);
         await expect(productDetailsPage.productPrice).toHaveText(catalogPrice);
       });
     },
@@ -49,6 +49,8 @@ test.describe('Catalog', () => {
     { tag: ['@regression'], annotation: knownBug('bug-01') },
     async ({ productDetailsPage }) => {
       await productDetailsPage.open(NON_EXISTENT_PRODUCT_ID);
+      // Anchor: the app shell has rendered, so "no enabled button" below is a real result, not an empty page.
+      await expect(productDetailsPage.header.cartLink).toBeVisible();
 
       await expect(productDetailsPage.enabledAddToCartButton).toBeHidden();
     },

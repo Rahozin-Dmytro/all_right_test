@@ -7,7 +7,6 @@ export interface CustomerInformation {
 }
 
 export class CheckoutInformationPage {
-  readonly title: Locator;
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly postalCodeInput: Locator;
@@ -16,7 +15,6 @@ export class CheckoutInformationPage {
 
   constructor(page: Page) {
     const form = page.getByRole('form', { name: 'Checkout information' });
-    this.title = page.getByTestId('title');
     this.firstNameInput = form.getByRole('textbox', { name: 'First Name' });
     this.lastNameInput = form.getByRole('textbox', { name: 'Last Name' });
     this.postalCodeInput = form.getByRole('textbox', { name: 'Zip/Postal Code' });
