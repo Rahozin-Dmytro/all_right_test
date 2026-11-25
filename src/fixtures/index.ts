@@ -10,6 +10,15 @@ import { InventoryPage } from '../pages/InventoryPage';
 import { LoginPage } from '../pages/LoginPage';
 import { ProductDetailsPage } from '../pages/ProductDetailsPage';
 
+/** Teardown delete that fails loudly, so a booking left on the shared server does not go unnoticed. */
+async function deleteBooking(bookingClient: BookingClient, id: number): Promise<void> {
+  const response = await bookingClient.delete(id);
+  // 405: the test already deleted the booking (the API answers 405 instead of 404, README.md#bug-14).
+  if (!response.ok() && response.status() !== 405) {
+    throw new Error(`Cleanup: delete booking ${id} failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
 interface Pages {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
@@ -61,12 +70,12 @@ export const test = base.extend<Pages & Api>({
   createdBooking: async ({ bookingClient }, use) => {
     const created = await bookingClient.createAndParse(buildBooking());
     await use(created);
-    await bookingClient.delete(created.bookingid);
+    await deleteBooking(bookingClient, created.bookingid);
   },
   cleanup: async ({ bookingClient }, use) => {
     const bookingIds: number[] = [];
     await use({ booking: (id) => bookingIds.push(id) });
-    await Promise.all(bookingIds.map((id) => bookingClient.delete(id)));
+    await Promise.all(bookingIds.map((id) => deleteBooking(bookingClient, id)));
   },
 });
 

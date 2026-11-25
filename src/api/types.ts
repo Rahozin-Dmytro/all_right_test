@@ -17,6 +17,16 @@ export interface CreatedBooking {
   booking: Booking;
 }
 
+export interface AuthRequest {
+  username: string;
+  password: string;
+}
+
 export interface AuthResponse {
   token: string;
+}
+
+/** Body that `POST /auth` returns instead of a token when credentials are rejected. */
+export interface AuthErrorResponse {
+  reason: string;
 }
