@@ -13,10 +13,9 @@ test.describe('Catalog', () => {
     'should show every product with name, price and add button when catalog is opened',
     { tag: ['@smoke'] },
     async ({ inventoryPage }) => {
-      // Precondition: every card shows "Add to cart" only while the cart is empty.
-      await expect(inventoryPage.header.cartBadge).toBeHidden();
-
       await expect(inventoryPage.productCards).toHaveCount(PRODUCT_COUNT);
+      // Precondition, checked after the cards anchor the rendered page: "Add to cart" on every card needs an empty cart.
+      await expect(inventoryPage.header.cartBadge).toBeHidden();
       await expect(inventoryPage.productNames).toHaveText(Array(PRODUCT_COUNT).fill(/\S/));
       await expect(inventoryPage.productPrices).toHaveText(Array(PRODUCT_COUNT).fill(/^\$\d+\.\d{2}$/));
       await expect(inventoryPage.addToCartButtons).toHaveCount(PRODUCT_COUNT);

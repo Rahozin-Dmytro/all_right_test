@@ -1,12 +1,13 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 
+/** Top bar shared by every page after login; the owning page passes its root (`primary-header`). */
 export class HeaderComponent {
   readonly cartBadge: Locator;
   readonly cartLink: Locator;
 
-  constructor(page: Page) {
-    this.cartBadge = page.getByTestId('shopping-cart-badge');
-    this.cartLink = page.getByTestId('shopping-cart-link');
+  constructor(root: Locator) {
+    this.cartBadge = root.getByTestId('shopping-cart-badge');
+    this.cartLink = root.getByTestId('shopping-cart-link');
   }
 
   async openCart(): Promise<void> {

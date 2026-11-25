@@ -1,4 +1,4 @@
-import type { AuthErrorResponse, Booking } from '../../../src/api/types';
+import type { Booking } from '../../../src/api/types';
 import { env } from '../../../src/config/env';
 import { buildBooking } from '../../../src/data/booking';
 import { expect, knownBug, test } from '../../../src/fixtures';
@@ -12,7 +12,7 @@ test.describe('Booking API negative', { tag: ['@api', '@regression'] }, () => {
     test('should not issue token when password is wrong', async ({ bookingClient }) => {
       const response = await bookingClient.auth(WRONG_CREDENTIALS);
 
-      const body = (await response.json()) as AuthErrorResponse;
+      const body: unknown = await response.json();
       expect(body).toEqual({ reason: 'Bad credentials' });
     });
 
