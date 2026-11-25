@@ -1,7 +1,8 @@
-import { expect, test } from '../../../src/fixtures';
+import { expect, knownBug, test } from '../../../src/fixtures';
 
 const PRODUCT_COUNT = 6;
 const BACKPACK = 'Sauce Labs Backpack';
+const NON_EXISTENT_PRODUCT_ID = 999;
 
 test.describe('Catalog', () => {
   test.beforeEach(async ({ inventoryPage }) => {
@@ -40,6 +41,16 @@ test.describe('Catalog', () => {
         await expect(productDetailsPage.productName).toHaveText(BACKPACK);
         await expect(productDetailsPage.productPrice).toHaveText(catalogPrice);
       });
+    },
+  );
+
+  test.fixme(
+    'should not allow adding to cart when product does not exist',
+    { tag: ['@regression'], annotation: knownBug('bug-01') },
+    async ({ productDetailsPage }) => {
+      await productDetailsPage.open(NON_EXISTENT_PRODUCT_ID);
+
+      await expect(productDetailsPage.enabledAddToCartButton).toBeHidden();
     },
   );
 });
