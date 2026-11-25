@@ -6,9 +6,9 @@ Workflows: skill `new-test` (write a test), skill `fix-flaky-test` (stabilize a 
 
 ## Commands
 
-- `npm test` — all projects · `npm run test:e2e` · `npm run test:api` · `npm run test:smoke`
+- `npm test` — all projects · `npm run test:e2e` · `npm run test:api` · `npm run test:smoke` · `npm run test:regression`
 - `npm run test:new -- <file>` — run a file 3× without retries (proof of stability)
-- `npm run check` — lint + typecheck (must be green before you finish)
+- `npm run check` — lint + typecheck + format check (must be green before you finish)
 - `npx playwright test <file> --debug` / `--trace on` · `npm run report`
 
 ## Structure

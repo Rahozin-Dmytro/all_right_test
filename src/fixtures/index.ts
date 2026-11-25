@@ -13,7 +13,7 @@ import { ProductDetailsPage } from '../pages/ProductDetailsPage';
 /** Teardown delete that fails loudly, so a booking left on the shared server does not go unnoticed. */
 async function deleteBooking(bookingClient: BookingClient, id: number): Promise<void> {
   const response = await bookingClient.delete(id);
-  // 405: the test already deleted the booking (the API answers 405 instead of 404, README.md#bug-14).
+  // 405: the test already deleted the booking (the API answers 405 instead of 404, BUG-14 in docs/exploratory.md).
   if (!response.ok() && response.status() !== 405) {
     throw new Error(`Cleanup: delete booking ${id} failed: ${response.status()} ${await response.text()}`);
   }
