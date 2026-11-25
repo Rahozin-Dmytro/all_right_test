@@ -3,6 +3,7 @@ import { BookingClient } from '../api/BookingClient';
 import type { CreatedBooking } from '../api/types';
 import { buildBooking } from '../data/booking';
 import { CartPage } from '../pages/CartPage';
+import { CheckoutInformationPage } from '../pages/CheckoutInformationPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { LoginPage } from '../pages/LoginPage';
 
@@ -10,6 +11,7 @@ interface Pages {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
   cartPage: CartPage;
+  checkoutInformationPage: CheckoutInformationPage;
 }
 
 interface Cleanup {
@@ -33,6 +35,9 @@ export const test = base.extend<Pages & Api>({
   },
   cartPage: async ({ page }, use) => {
     await use(new CartPage(page));
+  },
+  checkoutInformationPage: async ({ page }, use) => {
+    await use(new CheckoutInformationPage(page));
   },
 
   bookingClient: async ({ request }, use) => {

@@ -10,4 +10,8 @@ export class CartPage {
     this.itemNames = page.getByTestId('inventory-item-name');
     this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
   }
+
+  async checkout(): Promise<void> {
+    await this.checkoutButton.click();
+  }
 }
