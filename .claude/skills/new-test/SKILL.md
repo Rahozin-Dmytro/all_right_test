@@ -13,8 +13,9 @@ Follow the steps in order. Do not skip step 1–2 even for "small" tests.
 4. **Page Object / client.** Add locators as `readonly` fields and intent-named methods. Register new classes in fixtures. Follow `src/pages/InventoryPage.ts` / `src/api/BookingClient.ts`.
 5. **Spec.** Put it in `tests/e2e/<feature>/` or `tests/api/<feature>/`. Copy the shape of `tests/e2e/cart/cart.spec.ts` or `tests/api/booking/booking.spec.ts`. Data from `src/data` builders; setup/cleanup through fixtures/API.
 6. **Prove stability:** `npm run test:new -- <file>` must pass 3/3. On failure open the trace (`npx playwright show-trace test-results/**/trace.zip`) and fix the cause — see skill `fix-flaky-test`.
-7. **Quality gate:** `npm run check`.
-8. **Report** in 3–5 lines: files added/changed, scenario covered, run command, assumptions/open questions (e.g. missing test ids → propose adding `data-test` to the app).
+7. **Prove it can fail:** on a temporary copy of the spec break the expected behaviour once (wrong expected value, `page.route` returning a broken response, `page.addInitScript` mutating app code, or `fixme` unblocked) and run it with `--retries=0`. It must fail on its own assertion with a clear message. Delete the copy. Details: `.claude/rules/tests.md`.
+8. **Quality gate:** `npm run check`.
+9. **Report** in 3–5 lines: files added/changed, scenario covered, how failure was proven, run command, assumptions/open questions (e.g. missing test ids → propose adding `data-test` to the app).
 
 ## Checklist before reporting
 
@@ -22,4 +23,6 @@ Follow the steps in order. Do not skip step 1–2 even for "small" tests.
 - [ ] Has tag(s), no `test.only`, no unconditional skip
 - [ ] No raw locators in the spec, no XPath, no `nth()` without reason
 - [ ] Only web-first assertions, no fixed waits
+- [ ] Every absence assertion (`toBeHidden`, `toHaveCount(0)`, `not.*`) follows an anchor that the screen has rendered
+- [ ] Seen failing on its own assertion when the behaviour is broken
 - [ ] Independent: passes alone and in parallel, creates and cleans its own data

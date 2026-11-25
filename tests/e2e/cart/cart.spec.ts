@@ -1,7 +1,5 @@
+import { PRODUCTS } from '../../../src/data/products';
 import { expect, test } from '../../../src/fixtures';
-
-const BACKPACK = 'Sauce Labs Backpack';
-const BIKE_LIGHT = 'Sauce Labs Bike Light';
 
 test.describe('Cart', () => {
   test.beforeEach(async ({ inventoryPage }) => {
@@ -10,8 +8,8 @@ test.describe('Cart', () => {
 
   test('should show added product in cart', { tag: ['@smoke'] }, async ({ inventoryPage, cartPage }) => {
     await test.step('Add product to cart', async () => {
-      await inventoryPage.addToCart(BACKPACK);
-      await expect(inventoryPage.removeButton(BACKPACK)).toBeVisible();
+      await inventoryPage.addToCart(PRODUCTS.backpack);
+      await expect(inventoryPage.removeButton(PRODUCTS.backpack)).toBeVisible();
       await expect(inventoryPage.header.cartBadge).toHaveText('1');
     });
 
@@ -21,7 +19,7 @@ test.describe('Cart', () => {
     });
 
     await test.step('Verify cart content', async () => {
-      await expect(cartPage.itemNames).toHaveText([BACKPACK]);
+      await expect(cartPage.itemNames).toHaveText([PRODUCTS.backpack]);
     });
   });
 
@@ -29,8 +27,8 @@ test.describe('Cart', () => {
     'should count every added product in cart badge',
     { tag: ['@regression'] },
     async ({ inventoryPage }) => {
-      await inventoryPage.addToCart(BACKPACK);
-      await inventoryPage.addToCart(BIKE_LIGHT);
+      await inventoryPage.addToCart(PRODUCTS.backpack);
+      await inventoryPage.addToCart(PRODUCTS.bikeLight);
 
       await expect(inventoryPage.header.cartBadge).toHaveText('2');
     },
