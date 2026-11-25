@@ -5,7 +5,9 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: env.ci,
+  // Retries in CI only collect a trace on the first retry; a test that passes only on retry still fails the run.
   retries: env.ci ? 2 : 0,
+  failOnFlakyTests: env.ci,
   workers: env.ci ? 2 : undefined,
   reporter: env.ci
     ? [['html', { open: 'never' }], ['github'], ['list']]
