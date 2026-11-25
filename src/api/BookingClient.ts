@@ -1,13 +1,16 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
+import type { z } from 'zod';
 import { env } from '../config/env';
-import type { AuthErrorResponse, AuthRequest, AuthResponse, Booking, CreatedBooking } from './types';
+import type { AuthRequest, Booking, CreatedBooking } from './types';
+import { authErrorResponseSchema, authResponseSchema, bookingSchema, createdBookingSchema } from './types';
 
-async function parseOk<T>(response: APIResponse, action: string): Promise<T> {
+/** Throws with status and trimmed body if the response is not 2xx, then validates the body against the schema. */
+async function parseOk<T>(response: APIResponse, action: string, schema: z.ZodType<T>): Promise<T> {
   if (!response.ok()) {
     const body = (await response.text()).slice(0, 300);
     throw new Error(`${action} failed: ${response.status()} ${response.statusText()} — ${body}`);
   }
-  return (await response.json()) as T;
+  return schema.parse(await response.json());
 }
 
 export class BookingClient {
@@ -34,7 +37,7 @@ export class BookingClient {
   }
 
   async createAndParse(booking: Booking): Promise<CreatedBooking> {
-    return parseOk<CreatedBooking>(await this.create(booking), 'Create booking');
+    return parseOk(await this.create(booking), 'Create booking', createdBookingSchema);
   }
 
   async get(id: number): Promise<APIResponse> {
@@ -42,7 +45,7 @@ export class BookingClient {
   }
 
   async getAndParse(id: number): Promise<Booking> {
-    return parseOk<Booking>(await this.get(id), `Get booking ${id}`);
+    return parseOk(await this.get(id), `Get booking ${id}`, bookingSchema);
   }
 
   async update(id: number, booking: Booking): Promise<APIResponse> {
@@ -62,12 +65,11 @@ export class BookingClient {
     return { Cookie: `token=${this.token}` };
   }
 
-  /** The API answers rejected credentials with 200 and a `reason`, so a missing token is checked explicitly. */
+  /** The API answers rejected credentials with 200 and a `reason` (README.md#bug-09), so both shapes are accepted here. */
   private async issueToken(): Promise<string> {
     const response = await this.auth(env.apiAdmin);
-    const body = await parseOk<Partial<AuthResponse & AuthErrorResponse>>(response, 'Auth');
-    if (!body.token)
-      throw new Error(`Auth failed: ${response.status()} — ${body.reason ?? 'no token in response'}`);
+    const body = await parseOk(response, 'Auth', authResponseSchema.or(authErrorResponseSchema));
+    if (!('token' in body)) throw new Error(`Auth failed: ${response.status()} — ${body.reason}`);
     return body.token;
   }
 }

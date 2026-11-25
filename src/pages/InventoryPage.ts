@@ -14,7 +14,7 @@ export class InventoryPage {
   readonly activeSortOption: Locator;
 
   constructor(private readonly page: Page) {
-    this.header = new HeaderComponent(page);
+    this.header = new HeaderComponent(page.getByTestId('primary-header'));
     this.title = page.getByTestId('title');
     this.productCards = page.getByTestId('inventory-item');
     this.productNames = this.productCards.getByTestId('inventory-item-name');

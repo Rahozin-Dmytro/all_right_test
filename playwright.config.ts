@@ -16,11 +16,11 @@ export default defineConfig({
   expect: { timeout: 5_000 },
   use: {
     testIdAttribute: 'data-test',
-    trace: 'on-first-retry',
+    // CI: trace of the retry; locally there are no retries, so keep the trace of a failed run.
+    trace: env.ci ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     locale: 'en-US',
-    timezoneId: 'Europe/Bucharest',
     actionTimeout: 10_000,
   },
   projects: [

@@ -6,7 +6,7 @@ export class CheckoutCompletePage {
   readonly completeHeader: Locator;
 
   constructor(page: Page) {
-    this.header = new HeaderComponent(page);
+    this.header = new HeaderComponent(page.getByTestId('primary-header'));
     this.completeHeader = page.getByTestId('complete-header');
   }
 }

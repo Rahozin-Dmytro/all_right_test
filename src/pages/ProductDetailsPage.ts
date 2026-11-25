@@ -15,7 +15,7 @@ export class ProductDetailsPage {
 
   constructor(private readonly page: Page) {
     const details = page.getByTestId('inventory-item');
-    this.header = new HeaderComponent(page);
+    this.header = new HeaderComponent(page.getByTestId('primary-header'));
     this.backButton = page.getByRole('button', { name: 'Back to products' });
     this.productName = details.getByTestId('inventory-item-name');
     this.productPrice = details.getByTestId('inventory-item-price');
